@@ -17,7 +17,7 @@ def Main(arguments : list) -> None:
 	
 	# 출력.
 	builtins.print("__MAIN__")
-	builtins.print("DDUK-SERVICES")
+	builtins.print("DDUK-UPDATER")
 
 	# 데이터 매니저 설정.
 	dataManager = Repository.Get(DataManager)

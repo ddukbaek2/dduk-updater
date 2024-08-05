@@ -36,35 +36,47 @@ class CommandManager:
 		pass
 
 	#--------------------------------------------------------------------------------
-	# 프로세스 생성.
+	# 프로세스 실행 (동기식).
 	#--------------------------------------------------------------------------------
-	def Execute(self, executeFilePath : str) -> None:
+	def Start(command : str) -> subprocess.CompletedProcess:
 		try:
-			process = subprocess.Popen([executeFilePath], stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = True)
+			completedProcess = subprocess.run([f"start cmd /c {command}"], shell = True, check = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = True)
+			return completedProcess
 		except Exception as exception:
 			builtins.print(exception)
+			return None
 
-	#--------------------------------------------------------------------------------
-	# 프로세스 파괴.
-	#--------------------------------------------------------------------------------
-	def Kill(self, processName : str, killRootPath : str) -> None:
-		dataManager : DataManager = Repository.Get(DataManager)
-		processManager : ProcessManager = Repository.Get(ProcessManager)
+
+	# #--------------------------------------------------------------------------------
+	# # 프로세스 생성.
+	# #--------------------------------------------------------------------------------
+	# def Execute(self, executeFilePath : str) -> None:
+	# 	try:
+	# 		process = subprocess.Popen([executeFilePath], stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = True)
+	# 	except Exception as exception:
+	# 		builtins.print(exception)
+
+	# #--------------------------------------------------------------------------------
+	# # 프로세스 파괴.
+	# #--------------------------------------------------------------------------------
+	# def Kill(self, processName : str, killRootPath : str) -> None:
+	# 	dataManager : DataManager = Repository.Get(DataManager)
+	# 	processManager : ProcessManager = Repository.Get(ProcessManager)
 		
-		killRootPath = killRootPath.replace(BACKSLASH, SLASH)
-		builtins.print(f"killRootPath={killRootPath}")
+	# 	killRootPath = killRootPath.replace(BACKSLASH, SLASH)
+	# 	builtins.print(f"killRootPath={killRootPath}")
 
-		processInfos : dict[int, ProcessInfo] = processManager.FindProcessInfosByName(processName)
-		for processID, processInfo in processInfos.items():
-			processInfo = cast(ProcessInfo, processInfo)
-			executeFilePath = processInfo.FilePath.replace(BACKSLASH, SLASH)
-			executeFilePath = executeFilePath.upper()
-			if killRootPath in executeFilePath:
-				builtins.print(f"processID={processID}, FilePath={executeFilePath}")
-				try:
-					if processManager.DestroyProcessImmediateByID(processInfo.ID):
-						builtins.print(f"Process Kill: {processInfo.ID}")
-					else:
-						builtins.print(f"Process Kill Failed: {processInfo.ID}")
-				except Exception as exception:
-					builtins.print(f"Process Kill Exception: {processInfo.ID}, exception={exception}")
+	# 	processInfos : dict[int, ProcessInfo] = processManager.FindProcessInfosByName(processName)
+	# 	for processID, processInfo in processInfos.items():
+	# 		processInfo = cast(ProcessInfo, processInfo)
+	# 		executeFilePath = processInfo.FilePath.replace(BACKSLASH, SLASH)
+	# 		executeFilePath = executeFilePath.upper()
+	# 		if killRootPath in executeFilePath:
+	# 			builtins.print(f"processID={processID}, FilePath={executeFilePath}")
+	# 			try:
+	# 				if processManager.DestroyProcessImmediateByID(processInfo.ID):
+	# 					builtins.print(f"Process Kill: {processInfo.ID}")
+	# 				else:
+	# 					builtins.print(f"Process Kill Failed: {processInfo.ID}")
+	# 			except Exception as exception:
+	# 				builtins.print(f"Process Kill Exception: {processInfo.ID}, exception={exception}")
