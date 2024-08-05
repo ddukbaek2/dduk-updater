@@ -30,7 +30,7 @@ if "%COMMAND%" == "" (
 	echo !TEXT!
 	set TEXT=venv enable: 가상 환경 활성화
 	echo !TEXT!
-	set TEXT=venv update: 가상 환경 패키지 신규 설치 혹은 설치된 패키지 업데이트
+	set TEXT=venv update: 가상 환경 패키지 설치 및 업데이트
 	echo !TEXT!
 	set TEXT=venv disable: 가상 환경 비활성화
 	echo !TEXT!
@@ -66,10 +66,21 @@ if %errorlevel% equ 0 (
 ::--------------------------------------------------------------------------------
 :create
 	echo __VENV_CREATE_WINDOWS__
-	if defined VIRTUAL_ENV ( .venv\Scripts\deactivate.bat )
+
+	:: 가상 환경이 활성화 되어 있으면 비활성화.
+	if defined VIRTUAL_ENV ( call ".venv\Scripts\deactivate.bat" )
+	
+	:: 가상 환경이 있으면 제거.
 	if exist "%VENVPATH%" (  rmdir /s /q "%VENVPATH%" )
+
+	:: 가상 환경이 없으면 생성.
 	if not exist "%VENVPATH%" ( "%PYTHONFILEPATH%" -m venv "%VENVPATH%" )
-	if not defined VIRTUAL_ENV ( .venv\Scripts\activate.bat )
+
+	:: 가상 환경이 활성화 되어있지 않으면 활성화.
+	if not defined VIRTUAL_ENV ( call ".venv\Scripts\activate.bat" )
+
+	:: 가상 환경 패키지 업데이트.
+	call :update
 exit /b 0
 
 
@@ -80,7 +91,11 @@ exit /b 0
 ::--------------------------------------------------------------------------------
 :destroy
 	echo __VENV_DESTROY_WINDOWS__
-	if defined VIRTUAL_ENV ( .venv\Scripts\deactivate.bat )
+
+	:: 가상 환경이 활성화 되어 있으면 비활성화.
+	if defined VIRTUAL_ENV ( call ".venv\Scripts\deactivate.bat" )
+
+	:: 가상 환경이 있으면 제거.
 	if exist "%VENVPATH%" ( rmdir /s /q "%VENVPATH%" )
 exit /b 0
 
@@ -92,8 +107,15 @@ exit /b 0
 ::--------------------------------------------------------------------------------
 :enable
 	echo __VENV_ENABLE_WINDOWS__
+
+	:: 가상 환경이 없으면 생성.
 	if not exist "%VENVPATH%" ( "%PYTHONFILEPATH%" -m venv "%VENVPATH%" )
-	if not defined VIRTUAL_ENV ( .venv\Scripts\activate.bat )
+
+	:: 가상 환경이 활성화 되어있지 않으면 활성화.
+	if not defined VIRTUAL_ENV ( call ".venv\Scripts\activate.bat" )
+
+	:: 가상 환경 패키지 업데이트.
+	call :update
 exit /b 0
 
 
@@ -103,7 +125,9 @@ exit /b 0
 ::--------------------------------------------------------------------------------
 :disable
 	echo __VENV_DISABLE_WINDOWS__
-	if exist "%VENVPATH%" if defined VIRTUAL_ENV ( .venv\Scripts\deactivate.bat )
+
+	:: 가상 환경이 있으며 활성화 되어 있으면 비활성화.
+	if exist "%VENVPATH%" if defined VIRTUAL_ENV ( call ".venv\Scripts\deactivate.bat" )
 exit /b 0
 
 
@@ -114,8 +138,12 @@ exit /b 0
 ::--------------------------------------------------------------------------------
 :update
 	echo __VENV_UPDATE_WINDOWS__
+
+	:: 가상 환경이 없으면 생성.
 	if not exist "%VENVPATH%" ( "%PYTHONFILEPATH%" -m venv "%VENVPATH%" )
-	if not defined VIRTUAL_ENV ( .venv\Scripts\activate.bat )
+
+	:: 가상 환경이 활성화 되어있지 않으면 활성화.
+	if not defined VIRTUAL_ENV ( call ".venv\Scripts\activate.bat" )
 
 	:: 패키지 설치용 파일 경로 설정.
 	set REQUIREMENTSFILEPATH=%PROJECTPATH%\requirements.txt
