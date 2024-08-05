@@ -7,7 +7,6 @@ import builtins
 from dduk.core import Repository
 from src.datamanager import DataManager
 from src.manifestparser import ManifestParser
-from src.servicemanager import ServiceManager
 from src.networkmanager import NetworkManager
 
 
@@ -22,16 +21,12 @@ def Main(arguments : list) -> None:
 
 	# 데이터 매니저 설정.
 	dataManager = Repository.Get(DataManager)
-	manifestFilePath = dataManager.GetResPathWithRelativePath("manifest.json")
+	manifestFilePath = dataManager.GetWorkspacePathWithRelativePath("manifest.json")
 	
 	# 매니페스트 로드.
 	manifestParser = ManifestParser()
 	manifestParser.Parse(manifestFilePath)
 
-	# 서비스 매니저 시작.
-	serviceManager = Repository.Get(ServiceManager)
-	serviceManager.Run(manifestParser)
-
 	# 서버 시작.
-	networkManager = Repository.Get(NetworkManager)
+	networkManager : NetworkManager = Repository.Get(NetworkManager)
 	networkManager.Run(manifestParser.Host, manifestParser.Port)

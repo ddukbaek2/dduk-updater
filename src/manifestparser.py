@@ -18,8 +18,6 @@ UTF8 : str = "utf-8"
 HOST : str = "host"
 PORT : str = "port"
 SERVER : str = "server"
-SERVICES : str = "services"
-NAME : str = "name"
 EXECUTABLEPATH : str = "executablePath"
 
 
@@ -50,28 +48,15 @@ class ManifestParser:
 	def Parse(self, manifestFilePath : str) -> bool:
 		try:
 			if not os.path.isfile(manifestFilePath):
-				return False
-			
+				return False			
 			with open(manifestFilePath, READ, encoding = UTF8) as file:
 				jsonManifestData : dict = json.load(file)
 				if not jsonManifestData:
-					return False
-				
+					return False			
 				if SERVER in jsonManifestData:
-					builtins.print(SERVER)
 					jsonServerData : dict = jsonManifestData.get(SERVER, {HOST : DEFAULT_HOST, PORT : DEFAULT_PORT })
 					self.Host = jsonServerData.get(HOST, DEFAULT_HOST)
 					self.Port = jsonServerData.get(PORT, DEFAULT_PORT)
-
-				if SERVICES in jsonManifestData:
-					builtins.print(SERVICES)
-					jsonServicesData : list = jsonManifestData.get(SERVICES, list())
-					for jsonServiceData in jsonServicesData:
-						jsonServiceData = cast(dict, jsonServiceData)
-						serviceName = jsonServiceData.get(NAME, str())
-						serviceExecutablePath = jsonServiceData.get(EXECUTABLEPATH, str())
-						self.Services[serviceName] = serviceExecutablePath
-			builtins.print(self.Services)
 			return True		
 		except Exception as exception:
 			builtins.print(exception)

@@ -32,7 +32,7 @@ if "%COMMAND%" == "" (
 	exit /b 0
 ) else (
 	:: 레이블 실행.
-	call :%1
+	call :service
 )
 
 :: 레이블을 실행한 뒤 오류 갯수 검사.
@@ -52,44 +52,8 @@ if %errorlevel% equ 0 (
 ::--------------------------------------------------------------------------------
 :: 서비스 - 데브.
 ::--------------------------------------------------------------------------------
-:dev
+:service
 	echo __SERVICE_DEV_WINDOWS__
-
-	:: 가상환경 생성 ==> 활성화 ==> 업데이트.
-	call "venv.bat" update
-
-	:: 빌드 전 처리 실행.
-	:: python "%SOURCEPATH%\__prebuilder__.py"
-
-	:: 런처 실행.
-	:: python "%SOURCEPATH%\__launcher__.py" "SERVICE/NODEBUG/LOG" "live"
-	python "%SOURCEPATH%\__launcher__.py"
-exit /b 0
-
-
-::--------------------------------------------------------------------------------
-:: 서비스 - 테스트.
-::--------------------------------------------------------------------------------
-:test
-	echo __SERVICE_TEST_WINDOWS__
-
-	:: 가상환경 생성 ==> 활성화 ==> 업데이트.
-	call "venv.bat" update
-
-	:: 빌드 전 처리 실행.
-	:: python "%SOURCEPATH%\__prebuilder__.py"
-
-	:: 런처 실행.
-	:: python "%SOURCEPATH%\__launcher__.py" "SERVICE/NODEBUG/LOG" "test"
-	python "%SOURCEPATH%\__launcher__.py"
-exit /b 0
-
-
-::--------------------------------------------------------------------------------
-:: 서비스 - 라이브.
-::--------------------------------------------------------------------------------
-:live
-	echo __SERVICE_LIVE_WINDOWS__
 
 	:: 가상환경 생성 ==> 활성화 ==> 업데이트.
 	call "venv.bat" update

@@ -125,7 +125,7 @@ exit /b 0
 	call "venv.bat" update
 
 	:: 빌드 전 처리 실행.
-	python "%SOURCEPATH%\__prebuilder__.py"
+	:: python "%SOURCEPATH%\__prebuilder__.py"
 exit /b 0
 
 
@@ -151,6 +151,7 @@ exit /b 0
 
 	:: 런처 실행.
 	:: python "%SOURCEPATH%\__launcher__.py" "%SOURCE_SYMBOLS%" "%SOURCE_ARGUMENTS%"
+	python "%SOURCEPATH%\__launcher__.py"
 
 exit /b 0
 
