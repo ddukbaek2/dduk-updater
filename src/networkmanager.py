@@ -53,7 +53,9 @@ class NetworkManager:
 	#--------------------------------------------------------------------------------
 	def RequestExecute(self) -> Union[str, Tuple[str, int]]:
 		try:
-			executeFilePath = request.args.get("executeFilePath")
+			command = request.args.get("cmd")
+			commands = command.split(",")
+			executeFilePath = commands[0]
 			builtins.print(executeFilePath)
 			commandManager : CommandManager = Repository.Get(CommandManager)
 			commandManager.Execute(executeFilePath)
@@ -67,8 +69,10 @@ class NetworkManager:
 	#--------------------------------------------------------------------------------
 	def RequestKill(self) -> Union[str, Tuple[str, int]]:
 		try:
-			processName : str = request.args.get("PROCESSNAME")
-			killRootPath : str = request.args.get("KILLROOTPATH")
+			command = request.args.get("cmd")
+			commands = command.split(",")
+			processName : str = commands[0]
+			killRootPath : str = commands[1]
 			commandManager : CommandManager = Repository.Get(CommandManager)
 			commandManager.Kill(processName, killRootPath)
 			return "", HTTPStatus.OK
