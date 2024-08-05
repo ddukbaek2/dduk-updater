@@ -27,7 +27,7 @@ class NetworkManager:
 	#--------------------------------------------------------------------------------
 	def __init__(self) -> None:
 		self.__app = Flask("DDUK-UPDATER")
-		self.__app.add_url_rule("/<path:command>", "OnRequest", self.OnRequest, methods = ["GET"])
+		self.__app.add_url_rule("/", "OnRequest", self.OnRequest, methods = ["GET"])
 		# self.__app.add_url_rule("/", "RequestDefault", self.RequestDefault, methods = ["GET"])
 		# self.__app.add_url_rule("/execute", "RequestExecute", self.RequestExecute, methods = ["GET"])
 		# self.__app.add_url_rule("/kill", "RequestKill", self.RequestKill, methods = ["GET"])
@@ -43,8 +43,9 @@ class NetworkManager:
 	#--------------------------------------------------------------------------------
 	# 프로세스 시작.
 	#--------------------------------------------------------------------------------
-	def OnRequest(self, command : str) -> Union[str, Tuple[str, int]]:
+	def OnRequest(self) -> Union[str, Tuple[str, int]]:
 		try:
+			command : str = request.args.get("CMD")
 			commandManager : CommandManager = Repository.Get(CommandManager)
 			completedProcess : CompletedProcess = commandManager.Start(command)
 			if completedProcess:
