@@ -24,13 +24,9 @@ set TEXT=
 if "%COMMAND%" == "" (
 	:: 레이블 설명 출력.
 	setlocal enabledelayedexpansion
-	set TEXT=Usage: %EXECUTEFILENAME% {dev^|test^|live}
+	set TEXT=Usage: %EXECUTEFILENAME% {none}
 	echo !TEXT!
-	set TEXT=service dev: 데브 서비스 실행
-	echo !TEXT!
-	set TEXT=service test: 테스트 서비스 실행
-	echo !TEXT!
-	set TEXT=service live: 라이브 서비스 실행
+	set TEXT=service: 서비스 실행
 	echo !TEXT!
 	endlocal
 	exit /b 0
