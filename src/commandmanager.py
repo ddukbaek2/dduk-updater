@@ -38,13 +38,18 @@ class CommandManager:
 	#--------------------------------------------------------------------------------
 	# 프로세스 실행 (동기식).
 	#--------------------------------------------------------------------------------
-	def Start(command : str) -> subprocess.CompletedProcess:
+	def Start(self, command : str, arguments : list[str]) -> str:
 		try:
-			completedProcess = subprocess.run([f"start cmd /c {command}"], shell = True, check = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = True)
-			return completedProcess
+			commands = [command] + arguments
+			builtins.print(f"commands: {commands}")
+			completedProcess = subprocess.run(commands, shell = True, capture_output = True, text = True, check = True)
+			output : str = f"STDOUT:\n{completedProcess.stdout}\nSTDERR:\n{completedProcess.stderr}"
+			builtins.print(f"output: {output}")
+			return output
 		except Exception as exception:
-			builtins.print(exception)
-			return None
+			output : str = str(exception)
+			builtins.print(f"output: {output}")
+			return output
 
 
 	# #--------------------------------------------------------------------------------

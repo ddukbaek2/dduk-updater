@@ -4,7 +4,6 @@
 from __future__ import annotations
 from typing import Any, Final, Optional, Type, TypeVar, Union, Tuple, List, Dict, Set, cast
 import builtins
-from subprocess import CompletedProcess
 from http import HTTPStatus
 from flask import Flask, request, jsonify, make_response, redirect, url_for, render_template
 from dduk.core import Repository
@@ -45,14 +44,18 @@ class NetworkManager:
 	#--------------------------------------------------------------------------------
 	def OnRequest(self) -> Union[str, Tuple[str, int]]:
 		try:
-			command : str = request.args.get("CMD")
+			cmd : str = request.args.get("cmd")
+			builtins.print(f"cmd: {cmd}")
+
+			cmds = cmd.split()
+			command = cmds[0]
+			builtins.print(f"command: {command}")
+			arguments = cmds[1:]
+			builtins.print(f"arguments: {command}")
+
 			commandManager : CommandManager = Repository.Get(CommandManager)
-			completedProcess : CompletedProcess = commandManager.Start(command)
-			if completedProcess:
-				result : str = f"STDOUT:\n{completedProcess.stdout}\nSTDERR:\n{completedProcess.stderr}"
-				return result, HTTPStatus.OK
-			else:
-				return "EXCEPTION", HTTPStatus.INTERNAL_SERVER_ERROR
+			output = commandManager.Start(command, arguments)
+			return output, HTTPStatus.OK
 		except Exception as exception:
 			return str(exception), HTTPStatus.INTERNAL_SERVER_ERROR
 
